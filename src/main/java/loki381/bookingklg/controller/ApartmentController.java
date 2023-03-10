@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,5 +27,12 @@ public class ApartmentController {
         Optional<Apartment> apartment = this.apartmentService.findById(id);
 
         return ResponseEntity.ok(apartment.get());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Apartment>> findAll() {
+        List<Apartment> apartments = this.apartmentService.findAll();
+
+        return ResponseEntity.ok(apartments);
     }
 }

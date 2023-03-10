@@ -5,6 +5,7 @@ import loki381.bookingklg.repository.ApartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,5 +20,9 @@ public class ApartmentService {
 
     public Optional<Apartment> findById(Long id) {
         return this.apartmentRepository.findById(id);
+    }
+
+    public List<Apartment> findAll() {
+        return this.apartmentRepository.findAll();
     }
 }
