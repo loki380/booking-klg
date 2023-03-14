@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("bookings")
 public class BookingController {
 
-    private final BookingService bookingService;
+    private BookingService bookingService;
 
     public BookingController(BookingService bookingService){
         this.bookingService = bookingService;
@@ -30,8 +30,10 @@ public class BookingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Booking>> searchBookings() {
-        List<Booking> bookings = this.bookingService.findAll();
+    public ResponseEntity<List<Booking>> searchBookings(
+            @RequestParam(required = false, name = "apartment") String apartment,
+            @RequestParam(required = false, name = "tenant") String tenant) {
+        List<Booking> bookings = this.bookingService.searchBookings(apartment, tenant);
 
         return ResponseEntity.ok(bookings);
     }

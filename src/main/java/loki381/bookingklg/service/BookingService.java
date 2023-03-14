@@ -24,7 +24,9 @@ public class BookingService {
     private final PersonRepository personRepository;
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository, ApartmentRepository apartmentRepository, PersonRepository personRepository) {
+    public BookingService(BookingRepository bookingRepository,
+                          ApartmentRepository apartmentRepository,
+                          PersonRepository personRepository) {
         this.bookingRepository = bookingRepository;
         this.apartmentRepository = apartmentRepository;
         this.personRepository = personRepository;
@@ -34,8 +36,12 @@ public class BookingService {
         return this.bookingRepository.findById(id);
     }
 
-    public List<Booking> findAll() {
-        return this.bookingRepository.findAll();
+    public List<Booking> searchBookings(String apartment, String tenant) {
+        if (apartment == null && tenant == null) {
+            return this.bookingRepository.findAll();
+        } else {
+            return this.bookingRepository.searchBooking(apartment, tenant);
+        }
     }
 
     public Booking createBooking(Booking newBooking) {

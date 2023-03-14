@@ -1,6 +1,5 @@
 package loki381.bookingklg.service;
 
-import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.model.Person;
 import loki381.bookingklg.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ public class PersonService {
     private final PersonRepository personRepository;
 
     @Autowired
-    PersonService(PersonRepository personRepository){
+    PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
