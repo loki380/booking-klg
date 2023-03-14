@@ -5,9 +5,9 @@ INSERT INTO apartment(name, description, area, price) VALUES
      ('Apartament w kamienicy', 'Elegancki apartament z antycznymi meblami i oryginalnymi detalmi architektonicznymi', 60, 600),
      ('Apartament w luksusowej dzielnicy', 'Przestronny apartament z tarasem i widokiem na park, w pobliżu znajdują się ekskluzywne sklepy i restauracje', 100, 1200);
 
--- INSERT INTO person(id, name) VALUES
---      (1, 'Jan Kowalski'),
---      (2, 'Marian Kowalski');
+INSERT INTO person(id, name) VALUES
+     (1, 'Jan Kowalski'),
+     (2, 'Marian Kowalski');
 
 INSERT INTO booking(date_from, date_to) VALUES
      (TO_DATE('2023-01-02', 'yyyy-MM-dd'),CURRENT_DATE);

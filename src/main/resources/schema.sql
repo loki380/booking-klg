@@ -17,5 +17,6 @@ CREATE TABLE booking(
     date_from DATE,
     date_to DATE,
     landlord_id bigint,
-    tenant_id bigint
+    tenant_id bigint,
+    apartment_id bigint
 );
