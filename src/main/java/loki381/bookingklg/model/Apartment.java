@@ -14,8 +14,9 @@ public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     private BigDecimal price;
-    private String area;
+    private Double area;
     private String description;
 
 }
