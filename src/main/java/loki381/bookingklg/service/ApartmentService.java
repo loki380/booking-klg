@@ -25,4 +25,8 @@ public class ApartmentService {
     public List<Apartment> findAll() {
         return this.apartmentRepository.findAll();
     }
+
+    public Apartment save(Apartment apartment) {
+        return this.apartmentRepository.save(apartment);
+    }
 }
