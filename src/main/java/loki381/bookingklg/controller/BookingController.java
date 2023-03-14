@@ -1,8 +1,6 @@
 package loki381.bookingklg.controller;
 
-import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.model.Booking;
-import loki381.bookingklg.service.ApartmentService;
 import loki381.bookingklg.service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +14,15 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("bookings")
 public class BookingController {
 
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
-    public BookingController(BookingService bookingService){
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
-        Optional<Booking> booking = this.bookingService.findById(id);
+        Optional<Booking> booking = this.bookingService.getBookingById(id);
 
         return booking.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -46,6 +44,22 @@ public class BookingController {
             return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.status(CREATED).body(booking);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<Booking> updateBooking(@PathVariable("id") Long id, @RequestBody Booking newBooking) {
+        Optional<Booking> oldBooking = this.bookingService.getBookingById(id);
+
+        if (oldBooking.isPresent()) {
+            Booking booking = this.bookingService.updateBooking(oldBooking.get(), newBooking);
+            if (booking == null) {
+                return ResponseEntity.badRequest().build();
+            } else {
+                return ResponseEntity.ok(booking);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

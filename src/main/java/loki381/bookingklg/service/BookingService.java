@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class BookingService {
         this.personRepository = personRepository;
     }
 
-    public Optional<Booking> findById(Long id) {
+    public Optional<Booking> getBookingById(Long id) {
         return this.bookingRepository.findById(id);
     }
 
@@ -49,9 +50,7 @@ public class BookingService {
         Optional<Person> tenant = this.personRepository.findById(newBooking.getTenant().getId());
         Optional<Person> landlord = this.personRepository.findById(newBooking.getLandlord().getId());
 
-        LocalDate dateFrom = LocalDate.ofInstant(newBooking.getDateFrom().toInstant(), ZoneId.systemDefault());
-        LocalDate dateTo = LocalDate.ofInstant(newBooking.getDateTo().toInstant(), ZoneId.systemDefault());
-        long duration = Duration.between(dateFrom.atStartOfDay(), dateTo.atStartOfDay()).toDays();
+        long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
 
         BigDecimal cost = apartment.get().getPrice().multiply(BigDecimal.valueOf(duration));
 
@@ -65,5 +64,32 @@ public class BookingService {
                 .build();
 
         return this.bookingRepository.save(booking);
+    }
+
+    public Booking updateBooking(Booking oldBooking, Booking newBooking) {
+        Optional<Apartment> apartment = this.apartmentRepository.findById(newBooking.getApartment().getId());
+        Optional<Person> tenant = this.personRepository.findById(newBooking.getTenant().getId());
+        Optional<Person> landlord = this.personRepository.findById(newBooking.getLandlord().getId());
+
+        long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
+
+        BigDecimal cost = apartment.get().getPrice().multiply(BigDecimal.valueOf(duration));
+
+        Booking booking = oldBooking.toBuilder()
+                .dateFrom(newBooking.getDateFrom())
+                .dateTo(newBooking.getDateTo())
+                .landlord(landlord.get())
+                .tenant(tenant.get())
+                .apartment(apartment.get())
+                .cost(cost)
+                .build();
+
+        return this.bookingRepository.save(booking);
+    }
+
+    private long getDurationBetweenDates(Date dateFrom, Date dateTo) {
+        LocalDate dateFromAsLocalDate = LocalDate.ofInstant(dateFrom.toInstant(), ZoneId.systemDefault());
+        LocalDate dateToAsLocalDate = LocalDate.ofInstant(dateTo.toInstant(), ZoneId.systemDefault());
+        return Duration.between(dateFromAsLocalDate.atStartOfDay(), dateToAsLocalDate.atStartOfDay()).toDays();
     }
 }
