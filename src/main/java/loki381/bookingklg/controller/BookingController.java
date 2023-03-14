@@ -16,7 +16,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("bookings")
 public class BookingController {
 
-    private BookingService bookingService;
+    private final BookingService bookingService;
 
     public BookingController(BookingService bookingService){
         this.bookingService = bookingService;
@@ -26,11 +26,7 @@ public class BookingController {
     public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
         Optional<Booking> booking = this.bookingService.findById(id);
 
-        if (booking.isPresent()){
-            return ResponseEntity.ok(booking.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return booking.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
