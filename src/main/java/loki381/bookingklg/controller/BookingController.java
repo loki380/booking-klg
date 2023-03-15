@@ -52,7 +52,7 @@ public class BookingController {
         Optional<Booking> oldBooking = this.bookingService.getBookingById(id);
 
         if (oldBooking.isPresent()) {
-            Booking booking = this.bookingService.updateBooking(oldBooking.get(), newBooking);
+            Booking booking = this.bookingService.updateBooking(newBooking);
             if (booking == null) {
                 return ResponseEntity.badRequest().build();
             } else {

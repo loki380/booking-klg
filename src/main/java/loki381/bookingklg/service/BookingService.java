@@ -1,5 +1,6 @@
 package loki381.bookingklg.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.model.Person;
@@ -66,21 +67,22 @@ public class BookingService {
         return this.bookingRepository.save(booking);
     }
 
-    public Booking updateBooking(Booking oldBooking, Booking newBooking) {
-        Optional<Apartment> apartment = this.apartmentRepository.findById(newBooking.getApartment().getId());
-        Optional<Person> tenant = this.personRepository.findById(newBooking.getTenant().getId());
-        Optional<Person> landlord = this.personRepository.findById(newBooking.getLandlord().getId());
+    public Booking updateBooking(Booking newBooking) {
+        Booking oldBooking = this.bookingRepository.findById(newBooking.getId()).orElseThrow(EntityNotFoundException::new);
+        Apartment apartment = this.apartmentRepository.findById(newBooking.getApartment().getId()).orElseThrow(EntityNotFoundException::new);
+        Person tenant = this.personRepository.findById(newBooking.getTenant().getId()).orElseThrow(EntityNotFoundException::new);
+        Person landlord = this.personRepository.findById(newBooking.getLandlord().getId()).orElseThrow(EntityNotFoundException::new);
 
         long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
 
-        BigDecimal cost = apartment.get().getPrice().multiply(BigDecimal.valueOf(duration));
+        BigDecimal cost = apartment.getPrice().multiply(BigDecimal.valueOf(duration));
 
         Booking booking = oldBooking.toBuilder()
                 .dateFrom(newBooking.getDateFrom())
                 .dateTo(newBooking.getDateTo())
-                .landlord(landlord.get())
-                .tenant(tenant.get())
-                .apartment(apartment.get())
+                .landlord(landlord)
+                .tenant(tenant)
+                .apartment(apartment)
                 .cost(cost)
                 .build();
 

@@ -77,4 +77,46 @@ public class BookingServiceTests{
         Assert.assertEquals(createdBooking.getApartment().getName(), "Testowy apartament");
         Assert.assertEquals(createdBooking.getCost(), BigDecimal.valueOf(400));
     }
+
+    @Test
+    public void changeBooking(){
+        Apartment apartment = Apartment.builder()
+                .id(1L)
+                .name("Testowy apartament")
+                .price(BigDecimal.valueOf(100))
+                .build();
+
+        Person tenant = Person.builder()
+                .id(1L)
+                .name("Jan Testowy")
+                .build();
+
+        Person landlord = Person.builder()
+                .id(1L)
+                .name("Marek Testowy")
+                .build();
+
+        Booking booking = Booking.builder()
+                .id(1L)
+                .dateFrom(new Date(2023, Calendar.JANUARY,1))
+                .dateTo(new Date(2023,Calendar.JANUARY,5))
+                .apartment(apartment)
+                .tenant(tenant)
+                .landlord(landlord)
+                .build();
+
+        when(this.apartmentRepository.findById(1L)).thenReturn(Optional.of(apartment));
+        when(this.personRepository.findById(1L)).thenReturn(Optional.of(tenant));
+        when(this.personRepository.findById(2L)).thenReturn(Optional.of(landlord));
+        when(this.bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(this.bookingRepository.save(any())).then(AdditionalAnswers.returnsFirstArg());
+
+        booking.setDateTo(new Date(2023, Calendar.JANUARY, 10));
+
+        Booking updateBooking = this.bookingService.updateBooking(booking);
+
+        Assert.assertEquals(updateBooking.getDateTo(), new Date(2023, Calendar.JANUARY,10));
+        Assert.assertEquals(updateBooking.getApartment().getName(), "Testowy apartament");
+        Assert.assertEquals(updateBooking.getCost(), BigDecimal.valueOf(900));
+    }
 }
