@@ -1,13 +1,15 @@
 package loki381.bookingklg.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity(name = "apartment")
 @Table(name = "apartment")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class Apartment {
