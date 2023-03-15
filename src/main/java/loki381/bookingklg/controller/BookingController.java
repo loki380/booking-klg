@@ -2,6 +2,7 @@ package loki381.bookingklg.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Booking;
@@ -38,10 +39,11 @@ public class BookingController {
     }
 
     @Operation(description = "Wyszukiwanie rezerwacji z filtrami")
+    @Parameter
     @GetMapping
     public ResponseEntity<List<Booking>> searchBookings(
-            @RequestParam(required = false, name = "apartment") String apartment,
-            @RequestParam(required = false, name = "tenant") String tenant) {
+            @Parameter(description = "Nazwa apartamentu") @RequestParam(required = false, name = "apartment") String apartment,
+            @Parameter(description = "Nazwa najemcy") @RequestParam(required = false, name = "tenant") String tenant) {
         List<Booking> bookings = this.bookingService.searchBookings(apartment, tenant);
 
         return ResponseEntity.ok(bookings);
