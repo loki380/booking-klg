@@ -1,12 +1,11 @@
 package loki381.bookingklg.controller;
 
+import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.service.ApartmentService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.ServerException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,11 @@ public class ApartmentController {
     public ResponseEntity<Apartment> getApartmentById(@PathVariable Long id) {
         Optional<Apartment> apartment = this.apartmentService.findById(id);
 
-        return ResponseEntity.ok(apartment.get());
+        if (apartment.isPresent()) {
+            return ResponseEntity.ok(apartment.get());
+        } else {
+            throw new NoSuchElementException("Nie znaleziono apartamentu o id = " + id);
+        }
     }
 
     @GetMapping

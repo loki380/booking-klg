@@ -1,5 +1,6 @@
 package loki381.bookingklg.controller;
 
+import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.service.BookingService;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,11 @@ public class BookingController {
     public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
         Optional<Booking> booking = this.bookingService.getBookingById(id);
 
-        return booking.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (booking.isPresent()) {
+            return ResponseEntity.ok(booking.get());
+        } else {
+            throw new NoSuchElementException("Nie znaleziono rezerwacji o id = " + id);
+        }
     }
 
     @GetMapping

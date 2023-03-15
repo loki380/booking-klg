@@ -28,7 +28,7 @@ public class PersonController {
         if (person.isPresent()) {
             return ResponseEntity.ok(person.get());
         } else {
-            throw new NoSuchElementException("Nie znaleziono osoby o id = "+id);
+            throw new NoSuchElementException("Nie znaleziono osoby o id = " + id);
         }
     }
 
