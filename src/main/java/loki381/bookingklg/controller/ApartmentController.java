@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Apartment;
+import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.service.ApartmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +55,13 @@ public class ApartmentController {
         } else {
             return ResponseEntity.status(CREATED).body(apartment);
         }
+    }
+
+    @GetMapping("/{id}/bookings")
+    @Operation(description = "Rezerwacje dla danego obiektu")
+    public ResponseEntity<List<Booking>> getBookingsByApartmentId(@PathVariable Long id) {
+        List<Booking> bookings = this.apartmentService.getBookingsByApartmentId(id);
+
+        return ResponseEntity.ok(bookings);
     }
 }

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface BookingRepositoryCustom {
-    List<Booking> searchBooking(String apartment, String tenant);
-    List<Booking> getBookingsByApartmentId(Long apartmentId);
+    List<Booking> searchBooking(Long apartmentId, String apartmentName, String tenant);
     boolean checkIsOtherBookingInRange(Long apartmentId, Date dateFrom, Date dateTo);
 }

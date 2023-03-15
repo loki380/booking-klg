@@ -43,7 +43,7 @@ public class BookingService {
         if (apartment == null && tenant == null) {
             return this.bookingRepository.findAll();
         } else {
-            return this.bookingRepository.searchBooking(apartment, tenant);
+            return this.bookingRepository.searchBooking(null, apartment, tenant);
         }
     }
 
