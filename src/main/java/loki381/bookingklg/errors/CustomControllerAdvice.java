@@ -1,5 +1,6 @@
 package loki381.bookingklg.errors;
 
+import loki381.bookingklg.exceptions.ApartamentIsAlreadyBusyException;
 import loki381.bookingklg.exceptions.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,12 @@ public class CustomControllerAdvice {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorResponse> handleNoSuchElementExceptions(Exception e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+        return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
+    }
+
+    @ExceptionHandler(ApartamentIsAlreadyBusyException.class)
+    public ResponseEntity<ErrorResponse> handleApartamentIsAlreadyBusyExceptions(Exception e) {
+        HttpStatus status = HttpStatus.CONFLICT;
         return new ResponseEntity<>(new ErrorResponse(status, e.getMessage()), status);
     }
 }

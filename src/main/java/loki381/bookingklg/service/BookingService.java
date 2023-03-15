@@ -1,6 +1,7 @@
 package loki381.bookingklg.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import loki381.bookingklg.exceptions.ApartamentIsAlreadyBusyException;
 import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.model.Person;
@@ -54,10 +55,10 @@ public class BookingService {
         boolean otherBookingExist = this.bookingRepository.checkIsOtherBookingInRange(apartment.getId(), newBooking.getDateFrom(), newBooking.getDateTo());
 
         if (otherBookingExist) {
-            throw new EntityNotFoundException();
+            throw new ApartamentIsAlreadyBusyException("Apartament o id = " + apartment.getId() + " jest już zajęty w tym terminie");
         }
 
-        long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
+        long duration = getDurationBetweenDates(newBooking.getDateFrom(), newBooking.getDateTo());
 
         BigDecimal cost = apartment.getPrice().multiply(BigDecimal.valueOf(duration));
 
@@ -79,7 +80,7 @@ public class BookingService {
         Person tenant = this.personRepository.findById(newBooking.getTenant().getId()).orElseThrow(EntityNotFoundException::new);
         Person landlord = this.personRepository.findById(newBooking.getLandlord().getId()).orElseThrow(EntityNotFoundException::new);
 
-        long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
+        long duration = getDurationBetweenDates(newBooking.getDateFrom(), newBooking.getDateTo());
 
         BigDecimal cost = apartment.getPrice().multiply(BigDecimal.valueOf(duration));
 
