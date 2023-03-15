@@ -1,5 +1,6 @@
 package loki381.bookingklg;
 
+import loki381.bookingklg.exceptions.ApartamentIsAlreadyBusyException;
 import loki381.bookingklg.model.Apartment;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.model.Person;
@@ -118,5 +119,41 @@ public class BookingServiceTests{
         Assert.assertEquals(updateBooking.getDateTo(), new Date(2023, Calendar.JANUARY,10));
         Assert.assertEquals(updateBooking.getApartment().getName(), "Testowy apartament");
         Assert.assertEquals(updateBooking.getCost(), BigDecimal.valueOf(900));
+    }
+
+    @Test
+    public void addBooking_withBusyApartment(){
+        Apartment apartment = Apartment.builder()
+                .id(1L)
+                .name("Testowy apartament")
+                .price(BigDecimal.valueOf(100))
+                .build();
+
+        Person tenant = Person.builder()
+                .id(1L)
+                .name("Jan Testowy")
+                .build();
+
+        Person landlord = Person.builder()
+                .id(1L)
+                .name("Marek Testowy")
+                .build();
+
+        when(this.apartmentRepository.findById(1L)).thenReturn(Optional.of(apartment));
+        when(this.personRepository.findById(1L)).thenReturn(Optional.of(tenant));
+        when(this.personRepository.findById(2L)).thenReturn(Optional.of(landlord));
+        when(this.bookingRepository.checkIsOtherBookingInRange(any(),any(),any())).thenReturn(true);
+
+        Booking booking = Booking.builder()
+                .dateFrom(new Date(2023, Calendar.JANUARY,1))
+                .dateTo(new Date(2023,Calendar.JANUARY,5))
+                .apartment(apartment)
+                .tenant(tenant)
+                .landlord(landlord)
+                .build();
+
+        Assert.assertThrows(ApartamentIsAlreadyBusyException.class, () -> {
+            this.bookingService.createBooking(booking);
+        });
     }
 }
