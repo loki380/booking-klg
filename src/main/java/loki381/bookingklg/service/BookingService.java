@@ -47,20 +47,26 @@ public class BookingService {
     }
 
     public Booking createBooking(Booking newBooking) {
-        Optional<Apartment> apartment = this.apartmentRepository.findById(newBooking.getApartment().getId());
-        Optional<Person> tenant = this.personRepository.findById(newBooking.getTenant().getId());
-        Optional<Person> landlord = this.personRepository.findById(newBooking.getLandlord().getId());
+        Apartment apartment = this.apartmentRepository.findById(newBooking.getApartment().getId()).orElseThrow(EntityNotFoundException::new);
+        Person tenant = this.personRepository.findById(newBooking.getTenant().getId()).orElseThrow(EntityNotFoundException::new);
+        Person landlord = this.personRepository.findById(newBooking.getLandlord().getId()).orElseThrow(EntityNotFoundException::new);
+
+        boolean otherBookingExist = this.bookingRepository.checkIsOtherBookingInRange(apartment.getId(), newBooking.getDateFrom(), newBooking.getDateTo());
+
+        if (otherBookingExist) {
+            throw new EntityNotFoundException();
+        }
 
         long duration = getDurationBetweenDates(newBooking.getDateFrom(),newBooking.getDateTo());
 
-        BigDecimal cost = apartment.get().getPrice().multiply(BigDecimal.valueOf(duration));
+        BigDecimal cost = apartment.getPrice().multiply(BigDecimal.valueOf(duration));
 
         Booking booking = Booking.builder()
                 .dateFrom(newBooking.getDateFrom())
                 .dateTo(newBooking.getDateTo())
-                .landlord(landlord.get())
-                .tenant(tenant.get())
-                .apartment(apartment.get())
+                .landlord(landlord)
+                .tenant(tenant)
+                .apartment(apartment)
                 .cost(cost)
                 .build();
 

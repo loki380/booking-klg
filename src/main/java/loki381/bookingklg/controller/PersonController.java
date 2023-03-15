@@ -1,6 +1,6 @@
 package loki381.bookingklg.controller;
 
-import loki381.bookingklg.model.Booking;
+import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Person;
 import loki381.bookingklg.service.PersonService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,11 @@ public class PersonController {
     public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
         Optional<Person> person = this.personService.getPersonById(id);
 
-        return person.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (person.isPresent()) {
+            return ResponseEntity.ok(person.get());
+        } else {
+            throw new NoSuchElementException("Nie znaleziono osoby o id = "+id);
+        }
     }
 
     @GetMapping
@@ -40,7 +44,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<Person> createPerson(@RequestBody Person newPerson){
+    public ResponseEntity<Person> createPerson(@RequestBody Person newPerson) {
         Person person = this.personService.createPerson(newPerson);
 
         if (person == null) {
@@ -51,7 +55,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Person> createPerson(@PathVariable("id") Long id, @RequestBody Person person){
+    public ResponseEntity<Person> createPerson(@PathVariable("id") Long id, @RequestBody Person person) {
         Optional<Person> personData = this.personService.getPersonById(id);
 
         if (personData.isPresent()) {

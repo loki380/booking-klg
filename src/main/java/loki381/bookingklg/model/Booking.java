@@ -21,9 +21,12 @@ public class Booking {
     private Date dateTo;
     private BigDecimal cost;
     @ManyToOne
+    @JoinColumn(name = "landlord_id")
     private Person landlord; // Wynajmujący
     @ManyToOne
+    @JoinColumn(name = "tenant_id")
     private Person tenant; // Najemca
     @ManyToOne
+    @JoinColumn(name = "apartment_id")
     private Apartment apartment; // Najemca
 }
