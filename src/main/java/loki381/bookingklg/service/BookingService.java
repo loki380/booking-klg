@@ -101,4 +101,8 @@ public class BookingService {
         LocalDate dateToAsLocalDate = LocalDate.ofInstant(dateTo.toInstant(), ZoneId.systemDefault());
         return Duration.between(dateFromAsLocalDate.atStartOfDay(), dateToAsLocalDate.atStartOfDay()).toDays();
     }
+
+    public void deleteBooking(Long id) {
+        this.bookingRepository.deleteById(id);
+    }
 }

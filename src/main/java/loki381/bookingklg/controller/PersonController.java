@@ -1,5 +1,9 @@
 package loki381.bookingklg.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Person;
 import loki381.bookingklg.service.PersonService;
@@ -13,6 +17,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("persons")
+@Tag(name = "Persons", description = "Operacje związane z osobami (najemcy/wynajmujący)")
 public class PersonController {
 
     private final PersonService personService;
@@ -21,6 +26,8 @@ public class PersonController {
         this.personService = personService;
     }
 
+
+    @Operation(description = "Pobieranie osoby przez podanie id")
     @GetMapping("/{id}")
     public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
         Optional<Person> person = this.personService.getPersonById(id);
@@ -32,6 +39,7 @@ public class PersonController {
         }
     }
 
+    @Operation(description = "Pobieranie wszystkich osób")
     @GetMapping
     public ResponseEntity<List<Person>> getAllPersons() {
         List<Person> persons = this.personService.getAllPersons();
@@ -43,6 +51,7 @@ public class PersonController {
         }
     }
 
+    @Operation(description = "Dodawanie nowej osoby")
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person newPerson) {
         Person person = this.personService.createPerson(newPerson);

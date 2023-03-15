@@ -1,5 +1,8 @@
 package loki381.bookingklg.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import loki381.bookingklg.exceptions.NoSuchElementException;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.service.BookingService;
@@ -13,6 +16,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("bookings")
+@Tag(name = "Booking", description = "Operacje związane z rezerwacjami obiektów")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -21,6 +25,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
+    @Operation(description = "Pobieranie rezerwacji przez id")
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(@PathVariable Long id) {
         Optional<Booking> booking = this.bookingService.getBookingById(id);
@@ -32,6 +37,7 @@ public class BookingController {
         }
     }
 
+    @Operation(description = "Wyszukiwanie rezerwacji z filtrami")
     @GetMapping
     public ResponseEntity<List<Booking>> searchBookings(
             @RequestParam(required = false, name = "apartment") String apartment,
@@ -41,6 +47,7 @@ public class BookingController {
         return ResponseEntity.ok(bookings);
     }
 
+    @Operation(description = "Dodawanie nowej rezerwacji")
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody Booking newBooking) {
         Booking booking = this.bookingService.createBooking(newBooking);
@@ -52,7 +59,8 @@ public class BookingController {
         }
     }
 
-    @PutMapping
+    @Operation(description = "Edycja istniejącej rezerwacji")
+    @PutMapping("/{id}")
     public ResponseEntity<Booking> updateBooking(@PathVariable("id") Long id, @RequestBody Booking newBooking) {
         Optional<Booking> oldBooking = this.bookingService.getBookingById(id);
 
@@ -66,5 +74,12 @@ public class BookingController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Operation(description = "Usuwanie istniejącej rezerwacji")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBooking(@PathVariable("id") Long id) {
+        this.bookingService.deleteBooking(id);
+        return ResponseEntity.ok().build();
     }
 }
