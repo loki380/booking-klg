@@ -1,12 +1,14 @@
 package loki381.bookingklg.service;
 
 import loki381.bookingklg.model.Apartment;
+import loki381.bookingklg.model.ApartmentReport;
 import loki381.bookingklg.model.Booking;
 import loki381.bookingklg.repository.ApartmentRepository;
 import loki381.bookingklg.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,5 +37,9 @@ public class ApartmentService {
 
     public List<Booking> getBookingsByApartmentId(Long id) {
         return this.bookingRepository.searchBooking(id,null,null);
+    }
+
+    public ApartmentReport getApartmentReport(Long id, Date dateFrom, Date dateTo) {
+        return this.bookingRepository.getApartmentReport(id,dateFrom,dateTo);
     }
 }

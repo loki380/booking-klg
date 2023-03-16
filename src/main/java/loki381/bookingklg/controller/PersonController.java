@@ -5,11 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import loki381.bookingklg.exceptions.NoSuchElementException;
+import loki381.bookingklg.model.ApartmentReport;
+import loki381.bookingklg.model.LandlordReport;
 import loki381.bookingklg.model.Person;
 import loki381.bookingklg.service.PersonService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,5 +79,14 @@ public class PersonController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/report")
+    @Operation(description = "Raport z listą wynajmujących")
+    public ResponseEntity<List<LandlordReport>> getPersonsReport(@RequestParam(name = "dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFrom,
+                                                            @RequestParam(name = "dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateTo) {
+        List<LandlordReport> landlordReports = this.personService.getLandlordsReport(dateFrom, dateTo);
+
+        return ResponseEntity.ok(landlordReports);
     }
 }
